@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Lost in Space</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep-space: #0a0e27;
+            --bg-space: #1a1f3a;
+            --accent-cyan: #00f0ff;
+            --accent-purple: #b026ff;
+            --accent-pink: #ff006e;
+            --text-primary: #ffffff;
+            --text-secondary: #a8b2d1;
+            --star-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-deep-space);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .space-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: radial-gradient(ellipse at bottom, #1a1f3a 0%, #0a0e27 100%);
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 14, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+            padding: 1.5rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--accent-cyan);
+        }
+
+        /* Main Content */
+        .page {
+            display: none;
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 404 Page */
+        .error-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 100px);
+            text-align: center;
+        }
+
+        .astronaut-scene {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin-bottom: 3rem;
+        }
+
+        .astronaut {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) rotate(-5deg); }
+            50% { transform: translate(-50%, -60%) rotate(5deg); }
+        }
+
+        .astronaut svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 10px 30px rgba(0, 240, 255, 0.3));
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            animation: orbit 20s linear infinite;
+        }
+
+        .planet-1 {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            top: 20%;
+            left: 10%;
+            animation: orbit 15s linear infinite;
+            box-shadow: 0 0 40px rgba(255, 107, 107, 0.4);
+        }
+
+        .planet-2 {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            bottom: 15%;
+            right: 10%;
+            animation: orbit 25s linear infinite reverse;
+            box-shadow: 0 0 50px rgba(78, 205, 196, 0.4);
+        }
+
+        .planet-3 {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            top: 60%;
+            left: 15%;
+            animation: orbit 12s linear infinite;
+            box-shadow: 0 0 30px rgba(176, 38, 255, 0.4);
+        }
+
+        @keyframes orbit {
+            0% { transform: rotate(0deg) translateX(50px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(50px) rotate(-360deg); }
+        }
+
+        .error-code {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 1rem;
+            animation: glitch 3s infinite;
+            position: relative;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        .error-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .error-message {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid var(--accent-cyan);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 240, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Explore Page */
+        .explore-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .page-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .error-card {
+            background: rgba(26, 31, 58, 0.6);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .error-card:hover::before {
+            left: 100%;
+        }
+
+        .error-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 20px 50px rgba(0, 240, 255, 0.2);
+        }
+
+        .card-code {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Mission Control Page */
+        .mission-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .mission-content {
+            background: rgba(26, 31, 58, 0.6);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .mission-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .mission-text {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 1rem;
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Starmap Page */
+        .starmap-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .location-card {
+            background: rgba(26, 31, 58, 0.6);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .location-card:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-purple);
+            box-shadow: 0 10px 30px rgba(176, 38, 255, 0.3);
+        }
+
+        .location-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .location-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .location-status {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Particles */
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            animation: particleFloat 4s ease-out forwards;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .error-code {
+                font-size: 6rem;
+            }
+
+            .error-title {
+                font-size: 1.8rem;
+            }
+
+            .astronaut-scene {
+                width: 300px;
+                height: 300px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .explore-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-deep-space);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-ring {
+            width: 100px;
+            height: 100px;
+            border: 3px solid transparent;
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-ring"></div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="space-bg">
+        <div class="stars" id="stars"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">STELLAR</div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#explore" class="nav-link">Explore</a></li>
+                <li><a href="#mission" class="nav-link">Mission Control</a></li>
+                <li><a href="#starmap" class="nav-link">Star Map</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Home Page (404 Error) -->
+    <div class="page active" id="home-page">
+        <div class="error-container">
+            <div class="astronaut-scene">
+                <div class="astronaut">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Helmet -->
+                        <circle cx="100" cy="80" r="45" fill="rgba(0, 240, 255, 0.2)" stroke="var(--accent-cyan)" stroke-width="2"/>
+                        <ellipse cx="100" cy="80" rx="30" ry="35" fill="rgba(255, 255, 255, 0.1)"/>
+                        
+                        <!-- Body -->
+                        <rect x="70" y="110" width="60" height="60" rx="10" fill="#ffffff" opacity="0.9"/>
+                        
+                        <!-- Backpack -->
+                        <rect x="65" y="115" width="70" height="50" rx="8" fill="var(--accent-cyan)" opacity="0.8"/>
+                        
+                        <!-- Arms -->
+                        <rect x="50" y="120" width="15" height="40" rx="7" fill="#ffffff" opacity="0.9" transform="rotate(-20 57 140)"/>
+                        <rect x="135" y="120" width="15" height="40" rx="7" fill="#ffffff" opacity="0.9" transform="rotate(20 143 140)"/>
+                        
+                        <!-- Legs -->
+                        <rect x="75" y="165" width="18" height="30" rx="5" fill="#ffffff" opacity="0.9"/>
+                        <rect x="107" y="165" width="18" height="30" rx="5" fill="#ffffff" opacity="0.9"/>
+                        
+                        <!-- Visor reflection -->
+                        <ellipse cx="95" cy="75" rx="12" ry="18" fill="white" opacity="0.6"/>
+                    </svg>
+                </div>
+                <div class="planet planet-1"></div>
+                <div class="planet planet-2"></div>
+                <div class="planet planet-3"></div>
+            </div>
+
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">Houston, We Have a Problem</h2>
+            <p class="error-message">
+                Looks like you've drifted into uncharted territory. This page has gone on a solo mission beyond our solar system. 
+                Don't worry, our astronaut is searching for it!
+            </p>
+
+            <div class="btn-group">
+                <a href="#home" class="btn btn-primary">Return to Base</a>
+                <a href="#explore" class="btn btn-secondary">Explore Universe</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Explore Page -->
+    <div class="page" id="explore-page">
+        <div class="explore-container">
+            <h1 class="page-title">Lost in the Cosmos</h1>
+            <div class="explore-grid">
+                <div class="error-card">
+                    <div class="card-code">400</div>
+                    <h3 class="card-title">Bad Request Galaxy</h3>
+                    <p class="card-description">
+                        Your spaceship's coordinates don't compute. Time to recalibrate your navigation systems!
+                    </p>
+                </div>
+
+                <div class="error-card">
+                    <div class="card-code">401</div>
+                    <h3 class="card-title">Unauthorized Sector</h3>
+                    <p class="card-description">
+                        Access denied! You'll need the proper clearance codes to enter this restricted zone.
+                    </p>
+                </div>
+
+                <div class="error-card">
+                    <div class="card-code">403</div>
+                    <h3 class="card-title">Forbidden Nebula</h3>
+                    <p class="card-description">
+                        This area is off-limits. Even our best pilots can't venture here without special authorization.
+                    </p>
+                </div>
+
+                <div class="error-card">
+                    <div class="card-code">500</div>
+                    <h3 class="card-title">Server Supernova</h3>
+                    <p class="card-description">
+                        Our main reactor is experiencing a critical meltdown. Engineers are working on it!
+                    </p>
+                </div>
+
+                <div class="error-card">
+                    <div class="card-code">503</div>
+                    <h3 class="card-title">Service Black Hole</h3>
+                    <p class="card-description">
+                        Temporarily unavailable. Our service is caught in a gravitational pull. Please stand by!
+                    </p>
+                </div>
+
+                <div class="error-card">
+                    <div class="card-code">504</div>
+                    <h3 class="card-title">Gateway Timeout</h3>
+                    <p class="card-description">
+                        The wormhole connection timed out. Space-time continuum needs a moment to stabilize.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mission Control Page -->
+    <div class="page" id="mission-page">
+        <div class="mission-container">
+            <h1 class="page-title">Mission Control Center</h1>
+            <div class="mission-content">
+                <h2 class="mission-title">Need Assistance?</h2>
+                <p class="mission-text">
+                    Our ground control team is standing by to help you navigate back to familiar territory. 
+                    Whether you're experiencing technical difficulties or just need directions, we're here 24/7 
+                    to ensure your journey through our digital universe is smooth and enjoyable.
+                </p>
+
+                <form class="contact-form" id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Astronaut Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Communication Channel</label>
+                        <input type="email" id="email" name="email" placeholder="your.email@space.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Mission Report</label>
+                        <textarea id="message" name="message" placeholder="Describe your situation..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Send Transmission</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Star Map Page -->
+    <div class="page" id="starmap-page">
+        <div class="starmap-container">
+            <h1 class="page-title">Interactive Star Map</h1>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">
+                Navigate through different sectors of our digital universe
+            </p>
+            
+            <div class="map-grid">
+                <div class="location-card" onclick="navigateTo('#home')">
+                    <div class="location-icon">🏠</div>
+                    <div class="location-name">Home Base</div>
+                    <div class="location-status">Error Detection Center</div>
+                </div>
+
+                <div class="location-card" onclick="navigateTo('#explore')">
+                    <div class="location-icon">🌌</div>
+                    <div class="location-name">Error Galaxy</div>
+                    <div class="location-status">Explore Different Errors</div>
+                </div>
+
+                <div class="location-card" onclick="navigateTo('#mission')">
+                    <div class="location-icon">🛸</div>
+                    <div class="location-name">Control Station</div>
+                    <div class="location-status">Get Support</div>
+                </div>
+
+                <div class="location-card">
+                    <div class="location-icon">⭐</div>
+                    <div class="location-name">You Are Here</div>
+                    <div class="location-status">Star Map Navigation</div>
+                </div>
+
+                <div class="location-card" onclick="window.location.href='/'">
+                    <div class="location-icon">🚀</div>
+                    <div class="location-name">Main Site</div>
+                    <div class="location-status">Return to Website</div>
+                </div>
+
+                <div class="location-card">
+                    <div class="location-icon">🌠</div>
+                    <div class="location-name">Documentation</div>
+                    <div class="location-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate stars
+        function generateStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 150;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 3}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Page navigation
+        function navigateTo(hash) {
+            window.location.hash = hash;
+        }
+
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            const page = document.getElementById(pageId);
+            if (page) {
+                page.classList.add('active');
+            }
+
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${pageId.replace('-page', '')}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Handle navigation
+        function handleNavigation() {
+            const hash = window.location.hash.slice(1) || 'home';
+            showPage(`${hash}-page`);
+        }
+
+        // Nav link clicks
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const hash = link.getAttribute('href').slice(1);
+                window.location.hash = hash;
+            });
+        });
+
+        // Handle hash changes
+        window.addEventListener('hashchange', handleNavigation);
+
+        // Mouse particle effect
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.9) {
+                createParticle(e.clientX, e.clientY);
+            }
+        });
+
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.width = Math.random() * 5 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            
+            document.body.appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, 4000);
+        }
+
+        // Form submission
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('🚀 Transmission received! Mission Control will respond shortly.');
+            e.target.reset();
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            generateStars();
+            handleNavigation();
+            
+            // Hide loader
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Add interactive card hover effects
+        document.querySelectorAll('.error-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.animation = 'none';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 10);
+            });
+        });
+
+        // Location card clicks
+        document.querySelectorAll('.location-card').forEach(card => {
+            card.addEventListener('click', function() {
+                createParticle(
+                    this.getBoundingClientRect().left + this.offsetWidth / 2,
+                    this.getBoundingClientRect().top + this.offsetHeight / 2
+                );
+            });
+        });
+    </script>
+</body>
+</html>
