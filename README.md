@@ -1,6 +1,6 @@
 # 404 Error Page
 
-An animated, space-themed 404 error page built as a single static HTML file for Chennai Institute of Technology, Chennai.
+An animated, space-themed 404 error page built as a single static HTML file for Chennai Institute of Technology, Chennai, technical symposium event.
 
 ## Features
 
